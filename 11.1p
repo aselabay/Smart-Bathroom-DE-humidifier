@@ -1,0 +1,80 @@
+// This #include statement was automatically added by the Particle IDE.
+#include <Adafruit_DHT_Particle.h>
+
+
+
+// DHT parameters
+
+#define DHTPIN D7    // Define DHT pin connected to Raspberry Pi’s GPIO19/D7 Pin
+
+#define DHTTYPE DHT11    // Define DHT Sensor Type
+
+ 
+
+// Initialize Variables
+
+int temperature = 0;
+
+int humidity;
+
+// DHT sensor
+
+DHT dht(DHTPIN, DHTTYPE);
+
+ 
+
+void setup() {
+
+    Particle.variable("temperature", temperature);   //Declare Temperature Variable
+
+    dht.begin();
+
+}
+
+ 
+
+void loop() {
+
+ 
+
+    // Temperature measurement in Celcius
+
+    temperature = dht.getTempCelcius();
+
+ 
+
+    // Humidity measurement
+
+    humidity = dht.getHumidity();
+
+    Particle.publish ("temperature", String(temperature) + " °C");
+
+     delay(500);
+
+     Particle.publish ("humidity", String(humidity) + "%");
+
+     delay(500);
+
+ 
+
+     String temp = String(temperature);
+
+     Particle.publish("temp", temp, PRIVATE);
+
+ delay(30000);
+
+  if( temperature > 18 ) {
+
+ // if condition is true then print the following
+
+  Particle.publish("High Temp", "True");
+
+} else {
+
+ // if condition is false then print the following
+
+  Particle.publish("Low Temp", "True");
+
+}
+
+}
